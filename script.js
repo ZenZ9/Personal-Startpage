@@ -14,7 +14,114 @@ const DEFAULT_CONFIG = {
     { id: 'stackoverflow', label: 'Stack Overflow', url: 'https://stackoverflow.com', icon: 'S' }
   ],
   notes: 'Welcome back!\n\n- Check emails\n- Review sprint tasks\n- Watch the daily standup notes',
-  customCSS: '',
+  customCSS: `/* Default startpage CSS starter: edit this freely */
+/* You can override the app theme variables here.
+   Available variables: --bg, --bg-alt, --panel, --panel-soft,
+   --text, --muted, --border, --accent, --danger, --success
+*/
+
+:root {
+  --bg: #090d18;
+  --bg-alt: #0f172a;
+  --panel: rgba(15, 23, 42, 0.85);
+  --panel-strong: rgba(17, 24, 39, 0.9);
+  --panel-soft: rgba(30, 41, 59, 0.8);
+  --text: #edf2ff;
+  --muted: #9aa8c7;
+  --border: rgba(148, 163, 184, 0.16);
+  --shadow: rgba(15, 23, 42, 0.52);
+  --accent: #7c9cff;
+  --accent-strong: #9ab0ff;
+  --danger: #ff6b6b;
+  --success: #6ee7b7;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(124, 156, 255, 0.18), transparent 30%),
+    linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+  color: var(--text);
+}
+
+.app-shell {
+  width: min(1100px, 100%);
+}
+
+.clock-panel {
+  background: rgba(15, 23, 42, 0.2);
+  border: 1px solid var(--border);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.clock {
+  color: var(--text);
+}
+
+.date {
+  color: var(--muted);
+}
+
+.search-input-wrap,
+.engine-btn,
+.bookmark-card,
+.notes-input,
+.custom-css-input,
+.field-row input,
+.field-row select,
+.bookmark-item {
+  background: var(--panel-soft);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.engine-btn.active {
+  background: rgba(124, 156, 255, 0.12);
+  border-color: rgba(124, 156, 255, 0.45);
+  color: var(--text);
+}
+
+.bookmark-card:hover,
+.bookmark-item:hover,
+.settings-btn:hover,
+.primary-btn:hover,
+.secondary-btn:hover,
+.danger-btn:hover,
+.engine-btn:hover,
+.close-btn:hover {
+  border-color: rgba(124, 156, 255, 0.5);
+}
+
+.bookmark-icon {
+  background: rgba(124, 156, 255, 0.12);
+  border: 1px solid rgba(124, 156, 255, 0.18);
+  color: var(--text);
+}
+
+.primary-btn {
+  background: rgba(124, 156, 255, 0.12);
+}
+
+.danger-btn {
+  background: rgba(255, 107, 107, 0.08);
+  color: #ffc1c1;
+}
+
+.modal-backdrop {
+  background: rgba(3, 7, 18, 0.7);
+}
+
+.settings-section {
+  background: rgba(15, 23, 42, 0.2);
+}
+
+.settings-help {
+  color: var(--muted);
+}
+
+.notes-input::placeholder,
+.search-input-wrap input::placeholder {
+  color: var(--muted);
+}`,
   settings: {
     theme: 'dark',
     accent: '#7c9cff',
@@ -83,6 +190,16 @@ function mergeDeep(target, source) {
   return result;
 }
 
+function normalizeConfig(config) {
+  const normalized = mergeDeep(DEFAULT_CONFIG, config || {});
+
+  if (!normalized.customCSS || normalized.customCSS.trim() === '') {
+    normalized.customCSS = deepClone(DEFAULT_CONFIG.customCSS);
+  }
+
+  return normalized;
+}
+
 function loadConfig() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -91,7 +208,7 @@ function loadConfig() {
     }
 
     const parsed = JSON.parse(saved);
-    return mergeDeep(DEFAULT_CONFIG, parsed);
+    return normalizeConfig(parsed);
   } catch (error) {
     console.warn('Failed to load config. Falling back to defaults.', error);
     return deepClone(DEFAULT_CONFIG);
@@ -350,7 +467,7 @@ function resetConfig() {
   const shouldReset = window.confirm('Reset all settings, bookmarks, notes, and custom CSS to defaults?');
   if (!shouldReset) return;
 
-  appState = deepClone(DEFAULT_CONFIG);
+  appState = normalizeConfig(deepClone(DEFAULT_CONFIG));
   saveConfig();
   syncUIFromState();
   closeSettingsModal();
