@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Personal dashboard and startpage with bookmarks, notes, search, and settings."
+    />
+    <title>Startpage Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-theme="dark">
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="clock-panel" aria-live="polite">
+          <div id="clock" class="clock">00:00:00</div>
+          <div id="date" class="date">Loading date...</div>
+        </div>
+
+        <button id="settingsBtn" class="settings-btn" type="button" aria-label="Open settings">
+          ⚙️ Settings
+        </button>
+      </header>
+
+      <main class="content">
+        <section class="search-panel" aria-label="Search">
+          <form id="searchForm" class="search-form">
+            <div class="search-input-wrap">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input
+                id="searchInput"
+                type="text"
+                name="query"
+                placeholder="Search the web..."
+                autocomplete="off"
+                aria-label="Search input"
+              />
+            </div>
+
+            <div class="engine-switcher" aria-label="Search engine selector">
+              <button type="button" class="engine-btn active" data-engine="google">Google</button>
+              <button type="button" class="engine-btn" data-engine="duckduckgo">DuckDuckGo</button>
+              <button type="button" class="engine-btn" data-engine="bing">Bing</button>
+              <button type="button" class="engine-btn" data-engine="github">GitHub</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="bookmarks-panel">
+          <div class="section-heading">
+            <h2>Quick Links</h2>
+          </div>
+          <div id="bookmarksGrid" class="bookmarks-grid" aria-live="polite"></div>
+        </section>
+
+        <aside class="notes-panel" aria-label="Quick notes">
+          <div class="section-heading">
+            <h2>Quick Notes</h2>
+          </div>
+          <textarea
+            id="notesInput"
+            class="notes-input"
+            placeholder="Write something here..."
+            aria-label="Quick notes"
+          ></textarea>
+        </aside>
+      </main>
+    </div>
+
+    <div id="settingsModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close="true"></div>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal-header">
+          <h2 id="settingsTitle">Dashboard Settings</h2>
+          <button id="closeModalBtn" class="close-btn" type="button" aria-label="Close settings">
+            ×
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <section class="settings-section">
+            <h3>General</h3>
+            <div class="field-row">
+              <label for="themeSelect">Theme</label>
+              <select id="themeSelect">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <label for="accentColor">Accent Color</label>
+              <input id="accentColor" type="color" value="#7c9cff" />
+            </div>
+
+            <div class="field-row">
+              <label for="searchEngineSelect">Default Search Engine</label>
+              <select id="searchEngineSelect">
+                <option value="google">Google</option>
+                <option value="duckduckgo">DuckDuckGo</option>
+                <option value="bing">Bing</option>
+                <option value="github">GitHub</option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <label for="localeInput">Locale</label>
+              <input id="localeInput" type="text" placeholder="en-US" />
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <h3>Bookmarks</h3>
+
+            <form id="bookmarkForm" class="bookmark-form">
+              <input id="bookmarkId" type="hidden" />
+              <div class="field-row">
+                <label for="bookmarkLabel">Label</label>
+                <input id="bookmarkLabel" type="text" placeholder="Example: GitHub" required />
+              </div>
+
+              <div class="field-row">
+                <label for="bookmarkUrl">URL</label>
+                <input id="bookmarkUrl" type="url" placeholder="https://example.com" required />
+              </div>
+
+              <div class="field-row">
+                <label for="bookmarkIcon">Icon</label>
+                <input id="bookmarkIcon" type="text" placeholder="G" maxlength="2" />
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Save Bookmark</button>
+                <button type="button" id="cancelBookmarkEdit" class="secondary-btn">Clear</button>
+              </div>
+            </form>
+
+            <div id="bookmarkList" class="bookmark-list" aria-live="polite"></div>
+          </section>
+
+          <section class="settings-section">
+            <h3>Custom CSS</h3>
+            <textarea
+              id="customCssInput"
+              class="custom-css-input"
+              spellcheck="false"
+              placeholder="Write custom CSS here..."
+            ></textarea>
+          </section>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="exportConfigBtn" class="secondary-btn">Export Config</button>
+          <label class="secondary-btn import-label" for="importConfigInput">Import Config</label>
+          <input id="importConfigInput" type="file" accept="application/json" hidden />
+          <button type="button" id="resetConfigBtn" class="danger-btn">Reset Config</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
