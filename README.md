@@ -59,7 +59,7 @@ git clone https://github.com/ZenZ9/Personal-Startpage.git
 
 ```
 
-and run a simple local web server:
+Or run a simple local web server:
 
 ```bash
 python -m http.server 8000
